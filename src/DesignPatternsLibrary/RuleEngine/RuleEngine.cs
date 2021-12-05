@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DesignPatternsLibrary.RuleEngine
 {
     public class RuleEngine
     {
-        private readonly List<IRule> _rules;
-        private readonly IResultCollector _resultCollector;
-        public RuleEngine(List<IRule> rules, IResultCollector resultCollector)
+        private readonly List<IRule<string>> _rules;
+        private readonly IResultCollector<string> _resultCollector;
+        public RuleEngine(List<IRule<string>> rules, IResultCollector<string> resultCollector)
         {
             _rules = rules;
             _resultCollector = resultCollector;
         }
 
-        public IEvaluatingResult Apply(Context context) 
+        public IEvaluatingResult<string> Apply(Context<string> context) 
         {
-            foreach (IRule rule in _rules)
+            foreach (IRule<string> rule in _rules)
             {
                 if(rule.IsMatch(context))
                     _resultCollector.Collect(rule.Evaluate(context));
