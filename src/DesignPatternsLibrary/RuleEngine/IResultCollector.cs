@@ -1,8 +1,8 @@
 ﻿namespace DesignPatternsLibrary.RuleEngine
 {
-    public interface IResultCollector<T>
+    public interface IResultCollector
     {
-        IEvaluatingResult<T> GetTotal();
-        void Collect(IEvaluatingResult<T> item);
+        IEvaluatingResult GetTotal();
+        void Collect(IEvaluatingResult item);
     }
 }

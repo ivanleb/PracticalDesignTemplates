@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DesignPatternsLibrary.RuleEngine
+﻿namespace DesignPatternsLibrary.RuleEngine
 {
-    public interface IRule<T>
+    public interface IRule
     {
-        bool IsMatch(Context<T> context);
-        IEvaluatingResult<T> Evaluate(Context<T> context);
+        IEvaluatingResult Evaluate(Context context);
     }
 }

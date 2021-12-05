@@ -1,7 +1,7 @@
 ﻿namespace DesignPatternsLibrary.RuleEngine
 {
-    public class Context<T>
+    public class Context
     {
-        public T Value { get; set; }
+        public string Value { get; set; }
     }
 }

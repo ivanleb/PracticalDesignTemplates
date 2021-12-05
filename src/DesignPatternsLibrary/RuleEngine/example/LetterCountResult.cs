@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DesignPatternsLibrary.RuleEngine
+namespace DesignPatternsLibrary.RuleEngine.example
 {
-    public interface IEvaluatingResult
+    internal class LetterCountResult : IEvaluatingResult
     {
         public string Value { get; set; }
     }

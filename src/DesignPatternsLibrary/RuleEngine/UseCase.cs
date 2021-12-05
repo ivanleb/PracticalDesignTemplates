@@ -1,14 +1,17 @@
-﻿using System;
+﻿using DesignPatternsLibrary.RuleEngine.example;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DesignPatternsLibrary.RuleEngine
 {
-    public class UseCase
+    public static class UseCase
     {
-        public void Run() 
+        public static void Run() 
         {
-            
+            IRule rule = new SCountRule();
+            RuleEngine engine = new RuleEngine(new List<IRule> { rule }, new CountResultCollector());
+            var result = engine.Apply(new Context { Value = "ssssssssssssssssss" });
+            Console.WriteLine($"RuleEngine: {result.Value}");
         }
     }
 }
