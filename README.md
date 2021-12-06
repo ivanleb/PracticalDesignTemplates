@@ -7,3 +7,5 @@ Collection of design patterns in C#
 
 2. Rule Engine
 3. Specification
+4. Cache
+	- Cache service
