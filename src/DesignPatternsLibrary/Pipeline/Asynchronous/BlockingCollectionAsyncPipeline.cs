@@ -7,7 +7,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
 {
     public class BlockingCollectionAsyncPipeline
     {
-        private readonly BlockingCollection<Action> _jobs = new BlockingCollection<Action>(new ConcurrentQueue<Action>());
+        private readonly BlockingCollection<Action> _jobs = new BlockingCollection<Action>(new ConcurrentQueue<Action>(/*new  CustomPriorityQueue<Action, Int32>()*/));
 
         public BlockingCollectionAsyncPipeline()
         {

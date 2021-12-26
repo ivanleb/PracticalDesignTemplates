@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace DesignPatternsLibrary.Pipeline.Asynchronous
 {
-    public class RareActionsAsyncPipeline
+    public class ThreadPoolAsyncPipeline
     {
         private readonly Queue<Action> _jobs = new Queue<Action>();
         private bool _delegateQueuedOrRunning = false;
