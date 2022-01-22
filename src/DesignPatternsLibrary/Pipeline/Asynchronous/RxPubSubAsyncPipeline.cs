@@ -20,6 +20,6 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
         public void Enqueue(IContext<T> job) => _jobs.OnNext(job);
         
         public void RegisterHandler<JobType>(Action<JobType> handleAction) where JobType : IContext<T>
-            => _connectableObservable.OfType<JobType>().Subscribe(handleAction);        
+            => _connectableObservable.OfType<JobType>().Subscribe(handleAction);            
     }
 }

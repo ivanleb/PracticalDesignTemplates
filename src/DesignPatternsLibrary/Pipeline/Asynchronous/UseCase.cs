@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hangfire;
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,126 +23,132 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             DataflowAsyncPipelineUseCase();
             DataflowImproovedAsyncPipelineUseCase().Wait();
             DataflowPriorityAsyncPipelineUseCase();
+            DataflowCustomPriorityAsyncPipelineUseCase();
+            DataflowErrorHandlingAsyncPipelineUseCase();
+            HangfireUseCase();
             Console.WriteLine("Finish Pipeline.Asynchronous use case");
         }
 
         private static void NotThreadSafeAsyncPipelineUseCase()
         {
-            NotThreadSafeAsyncPipeline notThreadSafeAsyncPipeline = new NotThreadSafeAsyncPipeline();
+            NotThreadSafeAsyncPipeline pipeline = new NotThreadSafeAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
                 Action action = () => Console.WriteLine($"NotThreadSafeAsyncPipeline work: {i}");
-                notThreadSafeAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
         }
 
         private static void SimpleAsyncPipelineUseCase()
         {
-            SimpleAsyncPipeline simpleAsyncPipeline = new SimpleAsyncPipeline();
+            SimpleAsyncPipeline pipeline = new SimpleAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
                 Action action = () => Console.WriteLine($"SimpleAsyncPipeline work: {i}");
-                simpleAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
         }
 
         private static void BlockingCollectionAsyncPipelineUseCase()
         {
-            BlockingCollectionAsyncPipeline blockingCollectionAsyncPipeline = new BlockingCollectionAsyncPipeline();
+            BlockingCollectionAsyncPipeline pipeline = new BlockingCollectionAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
                 Action action = () => Console.WriteLine($"BlockingCollectionAsyncPipeline work: {i}");
-                blockingCollectionAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
         }
 
         private static void RareActionsAsyncPipelineUseCase()
         {
-            ThreadPoolAsyncPipeline rareActionsAsyncPipeline = new ThreadPoolAsyncPipeline();
+            ThreadPoolAsyncPipeline pipeline = new ThreadPoolAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 Action action = () =>
                 {
                     Console.WriteLine($"RareActionsAsyncPipeline work: {i}");
                 };
-                rareActionsAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
         }
 
         private static void ChannelAsyncPipelineUseCase()
         {
-            ChannelAsyncPipeline channelAsyncPipeline = new ChannelAsyncPipeline();
+            ChannelAsyncPipeline pipeline = new ChannelAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 Action action = () =>
                 {
                     Console.WriteLine($"ChannelAsyncPipeline work: {i}");
                 };
-                channelAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
+            pipeline.Stop();
         }
         
         private static void ChannelsMultiThreadsAsyncPipelineUseCase()
         {
-            ChannelsMultiThreadsAsyncPipeline chanelAsyncPipeline = new ChannelsMultiThreadsAsyncPipeline(threadCount: 10);
+            ChannelsMultiThreadsAsyncPipeline pipeline = new ChannelsMultiThreadsAsyncPipeline(threadCount: 10);
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 Action action = () =>
                 {
                     Console.WriteLine($"ChannelsMultiThreadsAsyncPipeline work: {i}");
                 };
-                chanelAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
+            pipeline.Stop();
         }
 
         private static async Task ChannelsImproovedAsyncPipelineUseCase() 
         {
-            ChannelsPubSubAsyncPipeline<string> channelsImproovedAsyncPipeline = new ChannelsPubSubAsyncPipeline<string>();
+            ChannelsPubSubAsyncPipeline<string> pipeline = new ChannelsPubSubAsyncPipeline<string>();
 
-            channelsImproovedAsyncPipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
-            channelsImproovedAsyncPipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.PI));
+            pipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
+            pipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.PI));
 
-            await channelsImproovedAsyncPipeline.Enqueue(new Context1());
-            await channelsImproovedAsyncPipeline.Enqueue(new Context2());
-            await channelsImproovedAsyncPipeline.Enqueue(new Context1());
-            await channelsImproovedAsyncPipeline.Enqueue(new Context1());
-            await channelsImproovedAsyncPipeline.Enqueue(new Context2());
-            await channelsImproovedAsyncPipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context2());
+            pipeline.Stop();
         }
 
         private static void RxAsyncPipelineUseCase() 
         {
-            RxAsyncPipeline rxAsyncPipeline = new RxAsyncPipeline();
+            RxAsyncPipeline pipeline = new RxAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
                 Action action = () =>
                 {
                     Console.WriteLine($"RxAsyncPipeline work: {i}");
                 };
-                rxAsyncPipeline.Enqueue(action); 
+                pipeline.Enqueue(action); 
             }
         }
 
         private static void RxAsyncPipelineImproovedUseCase()
         {
-            RxPubSubAsyncPipeline<string> rxAsyncPipeline = new RxPubSubAsyncPipeline<string>();
-            rxAsyncPipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
-            rxAsyncPipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.E));
-            rxAsyncPipeline.Enqueue(new Context1());
-            rxAsyncPipeline.Enqueue(new Context2());
-            rxAsyncPipeline.Enqueue(new Context1());
-            rxAsyncPipeline.Enqueue(new Context1());
-            rxAsyncPipeline.Enqueue(new Context2());
-            rxAsyncPipeline.Enqueue(new Context2()); 
+            RxPubSubAsyncPipeline<string> pipeline = new RxPubSubAsyncPipeline<string>();
+            pipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
+            pipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.E));
+            pipeline.Enqueue(new Context1());
+            pipeline.Enqueue(new Context2());
+            pipeline.Enqueue(new Context1());
+            pipeline.Enqueue(new Context1());
+            pipeline.Enqueue(new Context2());
+            pipeline.Enqueue(new Context2());
         }
 
         private static void DataflowAsyncPipelineUseCase()
         {
-            DataflowAsyncPipeline dataflowAsyncPipeline = new DataflowAsyncPipeline();
+            DataflowAsyncPipeline pipeline = new DataflowAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(TimeSpan.FromSeconds(3));
@@ -149,54 +156,84 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
                 {
                     Console.WriteLine($"DataflowAsyncPipeline work: {i}");
                 };
-                dataflowAsyncPipeline.Enqueue(action);
+                pipeline.Enqueue(action);
             }
+            pipeline.Stop();
         }
 
         private static async Task DataflowImproovedAsyncPipelineUseCase()
         {
-            DataflowPubSubAsyncPipeline<string> dataflowImproovedAsyncPipeline = new DataflowPubSubAsyncPipeline<string>();
+            DataflowPubSubAsyncPipeline<string> pipeline = new DataflowPubSubAsyncPipeline<string>();
 
-            dataflowImproovedAsyncPipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
-            dataflowImproovedAsyncPipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.Tau));
+            pipeline.RegisterHandler<Context1>(ctx => Console.WriteLine(ctx.Data));
+            pipeline.RegisterHandler<Context2>(ctx => Console.WriteLine(ctx.Data + " " + Math.Tau));
 
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context1());
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context2());
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context1());
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context1());
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context2());
-            await dataflowImproovedAsyncPipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context1());
+            await pipeline.Enqueue(new Context2());
+            await pipeline.Enqueue(new Context2());
+
+            pipeline.Stop();
         }
         
         private static void DataflowPriorityAsyncPipelineUseCase()
         {
-            DataflowPriorityAsyncPipeline dataflowAsyncPipeline = new DataflowPriorityAsyncPipeline();
+            DataflowPriorityAsyncPipeline pipeline = new DataflowPriorityAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(TimeSpan.FromSeconds(3));
+                int j = i;
                 Action action = () =>
-                {
-                    Console.WriteLine($"DataflowAsyncPipeline work: {i}");
+                {                    
+                    Console.WriteLine($"DataflowPriorityAsyncPipeline work: {j}");
                 };
-                Priority priority = (Priority)Enum.ToObject(typeof(Priority), i % 3);
-                dataflowAsyncPipeline.Enqueue(action, priority);
+                Priority priority = (Priority)Enum.ToObject(typeof(Priority), j % 3);
+                pipeline.Enqueue(action, priority);
             }
+            pipeline.Stop();
         }
 
         private static void DataflowCustomPriorityAsyncPipelineUseCase()
         {
-            ICustomPriorityQueue<Action> priprityQueue = null;
-            DataflowCustomPriorityAsyncPipeline dataflowAsyncPipeline = new DataflowCustomPriorityAsyncPipeline(priprityQueue);
+            DataflowCustomPriorityAsyncPipeline pipeline = new DataflowCustomPriorityAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
                 Thread.Sleep(TimeSpan.FromSeconds(3));
                 Action action = () =>
                 {
-                    Console.WriteLine($"DataflowAsyncPipeline work: {i}");
+                    Console.WriteLine($"DataflowCustomPriorityAsyncPipeline work: {i}");
                 };
-                
-                dataflowAsyncPipeline.Enqueue(action, i);
+
+                pipeline.Enqueue(action, i);
             }
+            pipeline.Stop();
+        }
+        
+
+        private static void DataflowErrorHandlingAsyncPipelineUseCase()
+        {
+            DataflowErrorHandlingAsyncPipeline pipeline = new DataflowErrorHandlingAsyncPipeline(new FailedJobQueue<string>());
+
+            pipeline.Enqueue(new Context3());
+            pipeline.Enqueue(new Context3());
+            pipeline.Enqueue(new Context3());
+            pipeline.Enqueue(new Context1());
+            pipeline.Enqueue(new Context2());
+            pipeline.Enqueue(new Context3());
+            pipeline.Stop();
+        }
+
+        private static void HangfireUseCase()
+        {
+            string? jobId = BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget!"));
+
+            string? delayedJobId = BackgroundJob.Schedule(() => Console.WriteLine("Delayed!"), TimeSpan.FromSeconds(20));
+
+            RecurringJob.AddOrUpdate("myrecurringjob", () => Console.WriteLine("Recurring!"), Cron.Minutely);
+
+            BackgroundJob.ContinueJobWith(jobId, () => Console.WriteLine("Continuation!"));
         }
     }
 }

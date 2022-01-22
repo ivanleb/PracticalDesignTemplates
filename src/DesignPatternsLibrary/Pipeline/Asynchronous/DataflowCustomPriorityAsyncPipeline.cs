@@ -29,5 +29,6 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
         private IProducerConsumerCollection<Action> GetPriorityQueue() => new CustomPriorityQueue<Action, int>();
         
         public void Enqueue(Action job, int priority) => _jobs.Add(job);
+        public void Stop() => _actionBlock.Complete();
     }
 }

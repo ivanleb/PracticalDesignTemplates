@@ -17,12 +17,12 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
                 if (!_delegateQueuedOrRunning)
                 {
                     _delegateQueuedOrRunning = true;
-                    ThreadPool.UnsafeQueueUserWorkItem(ProcessQueuedItems, null);
+                    ThreadPool.UnsafeQueueUserWorkItem(ProcessQueuedItems, state: null);
                 }
             }
         }
 
-        private void ProcessQueuedItems(object ignored)
+        private void ProcessQueuedItems(object? ignored)
         {
             while (true)
             {
@@ -44,7 +44,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
                 }
                 catch
                 {
-                    ThreadPool.UnsafeQueueUserWorkItem(ProcessQueuedItems, null);
+                    ThreadPool.UnsafeQueueUserWorkItem(ProcessQueuedItems, state: null);
                     throw;
                 }
             }
