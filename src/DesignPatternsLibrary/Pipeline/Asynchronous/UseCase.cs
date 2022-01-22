@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using DesignPatternsLibrary.Helpers;
+using Hangfire;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -59,12 +60,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             }
         }
 
-        private static void RareActionsAsyncPipelineUseCase()
+        private async static void RareActionsAsyncPipelineUseCase()
         {
             ThreadPoolAsyncPipeline pipeline = new ThreadPoolAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"RareActionsAsyncPipeline work: {i}");
@@ -73,12 +75,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             }
         }
 
-        private static void ChannelAsyncPipelineUseCase()
+        private async static void ChannelAsyncPipelineUseCase()
         {
             ChannelAsyncPipeline pipeline = new ChannelAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"ChannelAsyncPipeline work: {i}");
@@ -88,12 +91,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
         
-        private static void ChannelsMultiThreadsAsyncPipelineUseCase()
+        private static async void ChannelsMultiThreadsAsyncPipelineUseCase()
         {
             ChannelsMultiThreadsAsyncPipeline pipeline = new ChannelsMultiThreadsAsyncPipeline(threadCount: 10);
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"ChannelsMultiThreadsAsyncPipeline work: {i}");
@@ -119,12 +123,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
 
-        private static void RxAsyncPipelineUseCase() 
+        private async static void RxAsyncPipelineUseCase() 
         {
             RxAsyncPipeline pipeline = new RxAsyncPipeline();
             for (int i = 0; i < 20; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"RxAsyncPipeline work: {i}");
@@ -146,12 +151,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Enqueue(new Context2());
         }
 
-        private static void DataflowAsyncPipelineUseCase()
+        private async static void DataflowAsyncPipelineUseCase()
         {
             DataflowAsyncPipeline pipeline = new DataflowAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"DataflowAsyncPipeline work: {i}");
@@ -178,12 +184,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
         
-        private static void DataflowPriorityAsyncPipelineUseCase()
+        private async static void DataflowPriorityAsyncPipelineUseCase()
         {
             DataflowPriorityAsyncPipeline pipeline = new DataflowPriorityAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 int j = i;
                 Action action = () =>
                 {                    
@@ -195,12 +202,13 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
 
-        private static void DataflowCustomPriorityAsyncPipelineUseCase()
+        private async static void DataflowCustomPriorityAsyncPipelineUseCase()
         {
             DataflowCustomPriorityAsyncPipeline pipeline = new DataflowCustomPriorityAsyncPipeline();
             for (int i = 0; i < 10; i++)
             {
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                await TimeSpan.FromSeconds(3);
+
                 Action action = () =>
                 {
                     Console.WriteLine($"DataflowCustomPriorityAsyncPipeline work: {i}");
