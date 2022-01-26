@@ -4,6 +4,7 @@ Collection of design patterns in C#
 
 1. Pipeline
 	- Synchronous
+	- Asynchronous
 
 2. Rule Engine
 3. Specification
