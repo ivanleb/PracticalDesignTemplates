@@ -6,32 +6,32 @@ namespace DesignPatternsLibrary.BackgroundWorkerQueue
 {
     public class BackgroundWorkerQueue
     {
-        private Task previousTask = Task.FromResult(true);
-        private object key = new object();
+        private Task _previousTask = Task.FromResult(true);
+        private object _locker = new object();
 
         public Task QueueTask(Action action)
         {
-            lock (key)
+            lock (_locker)
             {
-                previousTask = previousTask.ContinueWith(
+                _previousTask = _previousTask.ContinueWith(
                   t => action(),
                   CancellationToken.None,
                   TaskContinuationOptions.None,
                   TaskScheduler.Default);
-                return previousTask;
+                return _previousTask;
             }
         }
 
         public Task<T> QueueTask<T>(Func<T> work)
         {
-            lock (key)
+            lock (_locker)
             {
-                var task = previousTask.ContinueWith(
+                var task = _previousTask.ContinueWith(
                   t => work(),
                   CancellationToken.None,
                   TaskContinuationOptions.None,
                   TaskScheduler.Default);
-                previousTask = task;
+                _previousTask = task;
                 return task;
             }
         }

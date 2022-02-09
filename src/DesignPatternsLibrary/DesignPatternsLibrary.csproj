@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pipeline\MultiThreaded\" />
     <Folder Include="Pipeline\MultiProcess\" />
   </ItemGroup>
 

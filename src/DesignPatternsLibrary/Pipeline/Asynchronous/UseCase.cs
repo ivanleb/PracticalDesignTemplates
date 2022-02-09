@@ -90,7 +90,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             }
             pipeline.Stop();
         }
-        
+
         private static async void ChannelsMultiThreadsAsyncPipelineUseCase()
         {
             ChannelsMultiThreadsAsyncPipeline pipeline = new ChannelsMultiThreadsAsyncPipeline(threadCount: 10);
@@ -107,7 +107,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
 
-        private static async Task ChannelsImproovedAsyncPipelineUseCase() 
+        private static async Task ChannelsImproovedAsyncPipelineUseCase()
         {
             ChannelsPubSubAsyncPipeline<string> pipeline = new ChannelsPubSubAsyncPipeline<string>();
 
@@ -123,7 +123,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Stop();
         }
 
-        private async static void RxAsyncPipelineUseCase() 
+        private async static void RxAsyncPipelineUseCase()
         {
             RxAsyncPipeline pipeline = new RxAsyncPipeline();
             for (int i = 0; i < 20; i++)
@@ -134,7 +134,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
                 {
                     Console.WriteLine($"RxAsyncPipeline work: {i}");
                 };
-                pipeline.Enqueue(action); 
+                pipeline.Enqueue(action);
             }
         }
 
@@ -183,7 +183,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
 
             pipeline.Stop();
         }
-        
+
         private async static void DataflowPriorityAsyncPipelineUseCase()
         {
             DataflowPriorityAsyncPipeline pipeline = new DataflowPriorityAsyncPipeline();
@@ -193,7 +193,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
 
                 int j = i;
                 Action action = () =>
-                {                    
+                {
                     Console.WriteLine($"DataflowPriorityAsyncPipeline work: {j}");
                 };
                 Priority priority = (Priority)Enum.ToObject(typeof(Priority), j % 3);
@@ -218,7 +218,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             }
             pipeline.Stop();
         }
-        
+
 
         private static void DataflowErrorHandlingAsyncPipelineUseCase()
         {
@@ -235,13 +235,21 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
 
         private static void HangfireUseCase()
         {
-            string? jobId = BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget!"));
+            try
+            {
+                string? jobId = BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget!"));
 
-            string? delayedJobId = BackgroundJob.Schedule(() => Console.WriteLine("Delayed!"), TimeSpan.FromSeconds(20));
+                string? delayedJobId = BackgroundJob.Schedule(() => Console.WriteLine("Delayed!"), TimeSpan.FromSeconds(20));
 
-            RecurringJob.AddOrUpdate("myrecurringjob", () => Console.WriteLine("Recurring!"), Cron.Minutely);
+                RecurringJob.AddOrUpdate("myrecurringjob", () => Console.WriteLine("Recurring!"), Cron.Minutely);
 
-            BackgroundJob.ContinueJobWith(jobId, () => Console.WriteLine("Continuation!"));
+                BackgroundJob.ContinueJobWith(jobId, () => Console.WriteLine("Continuation!"));
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("HangfireUseCase Error: " + e.Message);
+            }
         }
     }
 }
