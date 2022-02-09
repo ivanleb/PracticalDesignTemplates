@@ -13,5 +13,25 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             pipelineStep.Action = step;
             return default(TOutput);
         }
+
+        public static TOutput AddStep<TInput, TOutput, TInputOuter, TOutputOuter>(
+            this TInput inputType,
+            DataflowPipeline<TInputOuter, TOutputOuter> pipelineBuilder,
+            Func<TInput, TOutput> step)
+        {
+            DataflowPipeline<TInputOuter, TOutputOuter> pipelineStep = pipelineBuilder.AddStep(step);
+            return default(TOutput);
+        }
+
+        public static TOutput AddStep<TInput, TOutput, TInputOuter, TOutputOuter>(
+            this TInput inputType,
+            DataflowPipeline<TInputOuter, TOutputOuter> pipelineBuilder,
+            Func<TInput, TOutput> step,
+            int maxDegreeOfParallelism, 
+            int maxCapacity)
+        {
+            DataflowPipeline<TInputOuter, TOutputOuter> pipelineStep = pipelineBuilder.AddStep(step, maxDegreeOfParallelism, maxCapacity);
+            return default(TOutput);
+        }
     }
 }

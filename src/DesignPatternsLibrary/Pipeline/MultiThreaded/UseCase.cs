@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace DesignPatternsLibrary.Pipeline.MultiThreaded
 {
@@ -14,6 +14,9 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             NonGenericUseCase();
             GenericPipelineUseCase();
             NonGenericPipelineWithAsyncUseCase();
+            SimpleDataflowPipelineUseCase();
+            DataflowPipelineWithStepOptionsUseCase();
+            DataflowPipelineWithAwaitUseCase();
             Task.Delay(4000).Wait();
             Console.WriteLine("Finish Pipeline.MultiThreaded use case");
         }
@@ -56,6 +59,31 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
 
             Task<bool> resultTask = pipeline.Execute("The pipeline pattern is the best pattern");
             bool result = await resultTask;
+            Console.WriteLine(result);
+        }
+
+        private static void SimpleDataflowPipelineUseCase()
+        {
+            var pipeline = SimpleDataflowPipeline.CreatePipeline(resultCallback: res => Console.WriteLine(res));
+            pipeline.Post("The pipeline pattern is the best pattern");
+        }
+
+        private static async void DataflowPipelineWithStepOptionsUseCase()
+        {
+            var pipeline = SimpleDataflowPipeline.CreatePipelineWithStepOptions(resultCallback: res => Console.WriteLine(res));
+            await pipeline.SendAsync("The pipeline pattern is the best pattern");
+        }
+
+        private static async void DataflowPipelineWithAwaitUseCase()
+        {
+            DataflowPipeline<string, bool> pipeline = new DataflowPipeline<string, bool>(
+                (inputFirst, builder) =>
+                                    inputFirst
+                                        .AddStep(builder, input => FindMostCommon(input), maxDegreeOfParallelism: 2, maxCapacity: 2)
+                                        .AddStep(builder, input => input.Length, maxDegreeOfParallelism: 2, maxCapacity: 2)
+                                        .AddStep(builder, input => input % 2 == 1, maxDegreeOfParallelism: 2, maxCapacity: 2));
+
+            bool result = await pipeline.Execute("The pipeline pattern is the best pattern");
             Console.WriteLine(result);
         }
 
