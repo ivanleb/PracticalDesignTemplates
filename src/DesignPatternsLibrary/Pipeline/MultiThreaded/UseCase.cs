@@ -17,6 +17,7 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             SimpleDataflowPipelineUseCase();
             DataflowPipelineWithStepOptionsUseCase();
             DataflowPipelineWithAwaitUseCase();
+            SimpleDataflowPipelineWithAsyncStepsUseCase();
             Task.Delay(4000).Wait();
             Console.WriteLine("Finish Pipeline.MultiThreaded use case");
         }
@@ -87,6 +88,19 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             Console.WriteLine(result);
         }
 
+        private static void SimpleDataflowPipelineWithAsyncStepsUseCase()
+        {
+            SimpleDataflowPipelineWithAsyncSteps<string, bool> pipeline = new SimpleDataflowPipelineWithAsyncSteps<string, bool>();
+
+            pipeline.AddStepAsync<string, string>(async input => await FindMostCommonAsync(input));
+            pipeline.AddStep<string, int>(input => CountChars(input));
+            pipeline.AddStepAsync<int, bool>(async input => await IsOddAsync(input));
+
+            pipeline.CreatePipeline(res => Console.WriteLine(res));
+
+            pipeline.Execute("The pipeline pattern is the best pattern");
+        }
+
         static string FindMostCommon(string input)
         {
             string[] splitted = input.Split(' ');
@@ -101,5 +115,9 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             string mostCommon = counters.MaxBy(p => p.Value).Key;
             return mostCommon;
         }
+
+        static Task<string> FindMostCommonAsync(string input) => new Task<string>(() => FindMostCommon(input));
+        static int CountChars(string input) => input.Length;
+        static Task<bool> IsOddAsync(int input) => Task.FromResult(input % 2 == 0);
     }
 }
