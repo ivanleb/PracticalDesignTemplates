@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace DesignPatternsLibrary.Helpers
+namespace DesignPatternsLibrary.ProcessRunner
 {
     internal class ProcessCommunicator
     {

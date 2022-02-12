@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace DesignPatternsLibrary.Helpers
+namespace DesignPatternsLibrary.ProcessRunner
 {
     internal class DataReciever 
     {

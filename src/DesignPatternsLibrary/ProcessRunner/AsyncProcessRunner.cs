@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DesignPatternsLibrary.Helpers
+namespace DesignPatternsLibrary.ProcessRunner
 {
     public static class AsyncProcessRunner
     {

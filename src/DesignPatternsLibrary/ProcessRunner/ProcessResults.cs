@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace DesignPatternsLibrary.Helpers
+namespace DesignPatternsLibrary.ProcessRunner
 {
     public sealed class ProcessResults : IDisposable
     {
