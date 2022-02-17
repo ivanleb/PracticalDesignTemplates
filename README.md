@@ -6,7 +6,7 @@ Collection of design patterns in C#
 	- Synchronous
 	- MultiThreaded
 	- Asynchronous
-
+	- MultiProcess
 2. Rule Engine
 3. Specification
 4. Cache
