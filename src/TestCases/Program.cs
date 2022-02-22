@@ -9,3 +9,4 @@ DesignPatternsLibrary.Cache.Memoization.UseCase.Run();
 await DesignPatternsLibrary.BackgroundWorkerQueue.UseCase.Run();
 
 DesignPatternsLibrary.Pipeline.MultiProcess.UseCase.Run();
+DesignPatternsLibrary.MapReduce.UseCase.Run();
