@@ -14,3 +14,4 @@ Collection of design patterns in C#
 5. Async process runner
 6. Observer
 	- Async observer
+7. MapReduce
