@@ -7,6 +7,25 @@ namespace DesignPatternsLibrary.MapReduce
 {
     public static class MapReduceEx
     {
+        public static IEnumerable<IGrouping<TKey, TMapped>> Map<TSource, TKey, TMapped>(this IList<TSource> source, Func<TSource, IEnumerable<TMapped>> map, Func<TMapped, TKey> keySelector)
+        {  return source
+                .AsParallel()
+                .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
+                .WithDegreeOfParallelism(Environment.ProcessorCount)
+                .SelectMany(map)
+                .GroupBy(keySelector)
+                .ToList(); 
+        }
+
+        public static TResult[] Reduce<TKey, TMapped, TResult>(this IEnumerable<IGrouping<TKey, TMapped>> source, Func<IGrouping<TKey, TMapped>, TResult> reduce)
+        {
+            return source
+                 .AsParallel()
+                 .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
+                 .WithDegreeOfParallelism(Environment.ProcessorCount)
+                 .Select(reduce).ToArray();
+        }
+
         public static TResult[] MapReduce<TSource, TMapped, TKey, TResult>(
             this IList<TSource> source,
             Func<TSource, IEnumerable<TMapped>> map,
@@ -14,10 +33,9 @@ namespace DesignPatternsLibrary.MapReduce
             Func<IGrouping<TKey, TMapped>, TResult> reduce,
             int maxMapDegreeOfParallelism, int maxReduceDegreeOfParallelism)
         {
-            OrderablePartitioner<TSource> partitioner = Partitioner.Create(source, true);
-
-            TResult[] mapResults =
-                partitioner.AsParallel()
+            return
+                Partitioner.Create(source, true)
+                .AsParallel()
                 .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
                 .WithDegreeOfParallelism(maxMapDegreeOfParallelism)
                 .SelectMany(map)
@@ -27,8 +45,6 @@ namespace DesignPatternsLibrary.MapReduce
                 .WithDegreeOfParallelism(maxReduceDegreeOfParallelism)
                 .Select(reduce)
                 .ToArray();
-
-            return mapResults;
         }
     }
 }
