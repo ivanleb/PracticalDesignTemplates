@@ -27,6 +27,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             DataflowCustomPriorityAsyncPipelineUseCase();
             DataflowErrorHandlingAsyncPipelineUseCase();
             HangfireUseCase();
+            ParallelAsyncPipelineUseCase();
             Console.WriteLine("Finish Pipeline.Asynchronous use case");
         }
 
@@ -250,6 +251,23 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             {
                 Console.WriteLine("HangfireUseCase Error: " + e.Message);
             }
+        }
+
+        private static void ParallelAsyncPipelineUseCase() 
+        {
+            ParallelAsyncPipeline<string> parallelAsyncPipeline = new ParallelAsyncPipeline<string>();
+            parallelAsyncPipeline.Enqueue("first");
+            parallelAsyncPipeline.Enqueue("second");
+            parallelAsyncPipeline.Enqueue("third");
+            parallelAsyncPipeline.Enqueue("fourth");
+            parallelAsyncPipeline.Enqueue("fifth");
+            parallelAsyncPipeline.OnStart(2, item => 
+                    {
+                        Console.WriteLine(item);
+                        Thread.Sleep(TimeSpan.FromSeconds(3));
+                        if(item == "third")
+                            parallelAsyncPipeline.Enqueue("twenty third");
+                    });
         }
     }
 }
