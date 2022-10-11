@@ -152,7 +152,7 @@ namespace DesignPatternsLibrary.Pipeline.Asynchronous
             pipeline.Enqueue(new Context2());
         }
 
-        private async static void DataflowAsyncPipelineUseCase()
+        private static Task DataflowAsyncPipelineUseCase()
         {
             DataflowAsyncPipeline pipeline = new DataflowAsyncPipeline();
             for (int i = 0; i < 10; i++)
