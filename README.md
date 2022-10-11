@@ -1,6 +1,6 @@
-# DesignPatterns
+# Practical Design Templates
 
-Collection of design patterns in C#
+Collection of design templates in C#
 
 1. Pipeline
 	- Synchronous
