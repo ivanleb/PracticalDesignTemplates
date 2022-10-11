@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -9,8 +10,7 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
 {
     public class DataflowPipeline<TIn, TOut>
     {
-        private List<IDataflowBlock> _steps = new List<IDataflowBlock>();
-        private IJobProvider _jobProvider = new DefaultJobProvider();
+        private LinkedList<IDataflowBlock> _steps = new LinkedList<IDataflowBlock>();
 
         public DataflowPipeline(Func<TIn, DataflowPipeline<TIn, TOut>, TOut> steps)
         {
@@ -23,43 +23,36 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
 
         public DataflowPipeline<TIn, TOut> AddStep<TLocalIn, TLocalOut>(Func<TLocalIn, TLocalOut> stepFunc, int maxDegreeOfParallelism, int maxCapacity)
         {
-            TransformBlock<IJob<TLocalIn, TOut>, IJob<TLocalOut, TOut>> step = new(job =>
+            TransformBlock<Job<TLocalIn, TOut>, Job<TLocalOut, TOut>> step = new(job =>
             {
                 try
                 {
-                    return _jobProvider.CreateJob<TLocalOut, TOut>(stepFunc(job.Input), job.TaskCompletionSource);
+                    return new Job<TLocalOut, TOut>(stepFunc(job.Input), job.TaskCompletionSource);
                 }
                 catch (Exception e)
                 {
                     job.TaskCompletionSource.SetException(e);
-                    return _jobProvider.CreateJob<TLocalOut, TOut>(default(TLocalOut), job.TaskCompletionSource);
+                    return new Job<TLocalOut, TOut>(default(TLocalOut), job.TaskCompletionSource);
                 }
             }, new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism, BoundedCapacity = maxCapacity });
 
-            if (_steps.Count > 0)
-            {
-                IDataflowBlock lastStep = _steps.Last();
-                ISourceBlock<IJob<TLocalIn, TOut>> targetBlock = lastStep.CastTo<ISourceBlock<IJob<TLocalIn, TOut>>>();
-
-                targetBlock.LinkTo(
-                    step, 
-                    new DataflowLinkOptions (),
-                    job => !job.TaskCompletionSource.Task.IsFaulted);
-
-                targetBlock.LinkTo(
-                    DataflowBlock.NullTarget<IJob<TLocalIn, TOut>>(), 
-                    new DataflowLinkOptions(),
-                    job => job.TaskCompletionSource.Task.IsFaulted);
-            }
-            _steps.Add(step);
+            LinkToPreviousStep(step);
+            _steps.AddLast(step);
             return this;
         }
 
-        public DataflowPipeline<TIn, TOut> CreatePipeline(IJobProvider jobProvider = null)
+        public DataflowPipeline<TIn, TOut> CreatePipeline()
         {
             SetResultToLastStepBlock();
-            _jobProvider = jobProvider != null ?  jobProvider : _jobProvider;
             return this;
+        }
+
+        public Task<TOut> Execute(TIn input)
+        {
+            ITargetBlock<Job<TIn, TOut>> firstStep = _steps.First().CastTo<ITargetBlock<Job<TIn, TOut>>>();
+            TaskCompletionSource<TOut> tcs = new();
+            firstStep.SendAsync(new Job<TIn, TOut>(input, tcs));
+            return tcs.Task;
         }
 
         private void SetResultToLastStepBlock()
@@ -70,12 +63,23 @@ namespace DesignPatternsLibrary.Pipeline.MultiThreaded
             setResultBlock.LinkTo(setResultStep);
         }
 
-        public Task<TOut> Execute(TIn input)
+        private void LinkToPreviousStep<TLocalIn, TLocalOut>(TransformBlock<Job<TLocalIn, TOut>, Job<TLocalOut, TOut>> step)
         {
-            ITargetBlock<IJob<TIn, TOut>> firstStep = _steps[0].CastTo<ITargetBlock<IJob<TIn, TOut>>>();
-            TaskCompletionSource<TOut> tcs = new();
-            firstStep.SendAsync(_jobProvider.CreateJob<TIn, TOut>(input, tcs));
-            return tcs.Task;
+            if (!_steps.Any())
+                return;
+
+            IDataflowBlock lastStep = _steps.Last();
+            ISourceBlock<Job<TLocalIn, TOut>> targetBlock = lastStep.CastTo<ISourceBlock<Job<TLocalIn, TOut>>>();
+
+            targetBlock.LinkTo(
+                step,
+                new DataflowLinkOptions(),
+                job => !job.TaskCompletionSource.Task.IsFaulted);
+
+            targetBlock.LinkTo(
+                DataflowBlock.NullTarget<Job<TLocalIn, TOut>>(),
+                new DataflowLinkOptions(),
+                job => job.TaskCompletionSource.Task.IsFaulted);
         }
     }
 }
