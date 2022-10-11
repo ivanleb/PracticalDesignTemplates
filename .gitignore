@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/src/DesignPatternsLibrary/DistributedLock/ISynchronizationHandle.cs
+/src/DesignPatternsLibrary/DistributedLock/ILockProvider.cs
+/src/DesignPatternsLibrary/DistributedLock/ILock.cs
