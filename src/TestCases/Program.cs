@@ -10,3 +10,4 @@ await DesignPatternsLibrary.BackgroundWorkerQueue.UseCase.Run();
 
 DesignPatternsLibrary.Pipeline.MultiProcess.UseCase.Run();
 DesignPatternsLibrary.MapReduce.UseCase.Run();
+DesignPatternsLibrary.Lock.SimpleLock.UseCase.Run();
