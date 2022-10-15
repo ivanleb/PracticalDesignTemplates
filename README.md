@@ -15,3 +15,6 @@ Collection of design templates in C#
 6. Observer
 	- Async observer
 7. MapReduce
+8. Auto dispose stack
+9. Lock
+	- Simple lock
