@@ -1,55 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DesignPatternsLibrary.RemoteObjectCollection
 {
-    internal class ChunkDictionary<TKey, TStorage> : IDisposable
+    internal class ChunkDictionary<TKey, TChunk> : IDisposable
         where TKey : IComparable<TKey>
     {
-        private readonly SortedDictionary<TKey, IChunkId> _storages = new SortedDictionary<TKey, IChunkId>();
-        private readonly IChunkProvider<TStorage> _storageProvider;
+        private readonly SortedDictionary<TKey, IChunkId> _chunks = new SortedDictionary<TKey, IChunkId>();
+        private readonly IChunkProvider<TChunk> _chunkProvider;
 
-        public ChunkDictionary(IChunkProvider<TStorage> storageProvider)
+        public ChunkDictionary(IChunkProvider<TChunk> chunkProvider)
         {
-            _storageProvider = storageProvider;
+            _chunkProvider = chunkProvider;
         }
 
-        public int Count => _storages.Count;
+        public int Count => _chunks.Count;
+        public TKey ActiveChunkKey { get; private set; } = default(TKey);
 
-        public TStorage this[TKey key]
+        public TChunk this[TKey key]
         {
-            get => _storageProvider.FindStorage(_storages[key]);
+            get => GetChunk(key);
             set => SaveOrCreate(key, value);
         }
 
-        public void Add(TKey key, TStorage obj)
+        public void Add(TKey key, TChunk obj)
         {
-            _storages[key] = _storageProvider.Create(obj);
+            _chunks[key] = _chunkProvider.Create(obj);
         }
 
         public bool Remove(TKey key)
         {
-            if (_storages.ContainsKey(key))
+            if (_chunks.ContainsKey(key) && _chunkProvider.Remove(_chunks[key]))
             {
-                if (_storageProvider.Remove(_storages[key])) 
-                {
-                    _storages.Remove(key);
-                    return true;
-                }
+                _chunks.Remove(key);
+
+                if (ActiveChunkKey.Equals(key))
+                    ActiveChunkKey = default(TKey);
+
+                return true;
             }
             return false;
         }
 
-        public void Dispose()
+        public TChunk? Last()
         {
-            _storageProvider.Dispose();
+            TKey? lastKey = _chunks.Keys.Max();
+            if (lastKey == null)
+                return default(TChunk?);
+
+            return GetChunk(lastKey);
         }
 
-        private void SaveOrCreate(TKey key, TStorage storage) 
+        public void Dispose()
         {
-            if (_storages.ContainsKey(key))
+            _chunkProvider.Dispose();
+        }
+
+        private TChunk GetChunk(TKey key)
+        {
+            IChunkId chunkId = _chunks[key];
+            ActiveChunkKey = key;
+            return _chunkProvider.GetChunk(chunkId);
+        }
+
+        private void SaveOrCreate(TKey key, TChunk storage)
+        {
+            if (_chunks.ContainsKey(key))
             {
-                _storageProvider.Save(storage, _storages[key]);
+                _chunkProvider.ChangeChunk(storage, _chunks[key]);
                 return;
             }
 

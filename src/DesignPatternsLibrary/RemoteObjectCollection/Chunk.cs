@@ -13,6 +13,12 @@ namespace DesignPatternsLibrary.RemoteObjectCollection
             Size = size;
         }
 
+        public Chunk(IReadOnlyList<T> data)
+        { 
+            _data = data.ToList();
+            Size = data.Count;
+        }
+
         public int Size { get; }
         public int Count => _data.Count();
 
@@ -30,21 +36,32 @@ namespace DesignPatternsLibrary.RemoteObjectCollection
         }
 
 
-        public int Add(T entity)
+        public bool Add(T entity)
         {
             if (_data.Count >= Size) 
-                return -1;
+                return false;
 
             _data.Add(entity);
-            return 1;
+            return true;
         }
 
         public bool Remove(T entity) => _data.Remove(entity);
         public void RemoveAt(int i) => _data.RemoveAt(i);
         public void Insert(int index, T value) => _data.Insert(index, value);
-        public int FindIndex(T entity) => _data.FindIndex(x => x.Equals(entity));
+        public int FindIndex(T entity) => _data.FindIndex(x => x is not null && x.Equals(entity));
         public void Clear() => _data.Clear();
-
+        public T[] GetValues() => _data.ToArray();
         private readonly bool IsIndexInRange(int index) => index >= 0 && index < _data.Count;
+    }
+
+    public static class ChunkExtentions 
+    {
+        public static void AddRange<T>(this Chunk<T> chunk, IReadOnlyCollection<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                chunk.Add(entity);
+            }
+        }
     }
 }

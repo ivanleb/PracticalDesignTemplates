@@ -6,5 +6,6 @@ namespace DesignPatternsLibrary.RemoteObjectCollection
     {
         Guid Id { get; }
         object Path { get; }
+        int Count { get; }
     }
 }

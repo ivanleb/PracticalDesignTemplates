@@ -5,9 +5,9 @@ namespace DesignPatternsLibrary.RemoteObjectCollection
 {
     public class RemoteCollectionEnumerator<T> : IEnumerator<T>
     {
-        private readonly RemoteCollection<T> _remoteCollection;
+        private readonly RemotePaginationCollection<T> _remoteCollection;
         private int position = -1;
-        public RemoteCollectionEnumerator(RemoteCollection<T> remoteCollection)
+        public RemoteCollectionEnumerator(RemotePaginationCollection<T> remoteCollection)
         {
             _remoteCollection = remoteCollection;
         }
@@ -15,10 +15,9 @@ namespace DesignPatternsLibrary.RemoteObjectCollection
         public object Current => IsPositionInCollectionRange() ? _remoteCollection[position] : throw new InvalidOperationException();
         T IEnumerator<T>.Current => IsPositionInCollectionRange() ? _remoteCollection[position] : throw new InvalidOperationException();
 
-        public bool MoveNext() => ++position < _remoteCollection.Count - 1;
+        public bool MoveNext() => ++position < _remoteCollection.LastChunkIndex - 1;
         public void Reset() => position = -1;
-        public void Dispose()
-        { }
-        private bool IsPositionInCollectionRange() => !(position == -1 || position >= _remoteCollection.Count);
+        public void Dispose() { }
+        private bool IsPositionInCollectionRange() => !(position == -1 || position >= _remoteCollection.LastChunkIndex);
     }
 }
