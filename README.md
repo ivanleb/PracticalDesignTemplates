@@ -11,6 +11,8 @@ Collection of design templates in C#
 3. Specification
 4. Cache
 	- Cache service
+	- Persistent in process cache
+	- Memoization
 5. Async process runner
 6. Observer
 	- Async observer
