@@ -4,6 +4,7 @@ DesignPatternsLibrary.Pipeline.Asynchronous.UseCase.Run();
 DesignPatternsLibrary.RuleEngine.UseCase.Run();
 DesignPatternsLibrary.Specification.UseCase.Run();
 DesignPatternsLibrary.Cache.Memoization.UseCase.Run();
+DesignPatternsLibrary.Cache.PersistentInProcessCache.UseCase.Run();
 await DesignPatternsLibrary.BackgroundWorkerQueue.UseCase.Run();
 
 DesignPatternsLibrary.Pipeline.MultiProcess.UseCase.Run();
