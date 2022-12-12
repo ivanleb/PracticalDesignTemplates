@@ -18,3 +18,4 @@ Collection of design templates in C#
 8. Auto dispose stack
 9. Lock
 	- Simple lock
+10. Ring buffer
