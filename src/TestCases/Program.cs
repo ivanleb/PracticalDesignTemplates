@@ -12,3 +12,4 @@ DesignPatternsLibrary.MapReduce.UseCase.Run();
 DesignPatternsLibrary.Lock.SimpleLock.UseCase.Run();
 DesignPatternsLibrary.Disposable.UseCase.Run();
 DesignPatternsLibrary.RingBuffer.UseCase.Run();
+DesignPatternsLibrary.EventLoop.UseCase.Run();
