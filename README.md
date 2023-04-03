@@ -3,21 +3,21 @@
 Collection of design templates in C#
 
 1. Pipeline
-	- Synchronous
-	- MultiThreaded
-	- Asynchronous
-	- MultiProcess
-2. Rule Engine
-3. Specification
+	- [Synchronous](src/DesignPatternsLibrary/Pipeline/Synchronous)
+	- [MultiThreaded](src/DesignPatternsLibrary/Pipeline/MultiThreaded)
+	- [Asynchronous](src/DesignPatternsLibrary/Pipeline/Asynchronous)
+	- [MultiProcess](src/DesignPatternsLibrary/Pipeline/MultiProcess)
+2. [Rule Engine](src/DesignPatternsLibrary/RuleEngine)
+3. [Specification](src/DesignPatternsLibrary/Specification)
 4. Cache
-	- Cache service
-	- Persistent in process cache
-	- Memoization
-5. Async process runner
-6. Observer
+	- [Cache service](src/DesignPatternsLibrary/Cache/MemoryCacheService)
+	- [Persistent in process cache](src/DesignPatternsLibrary/Cache/PersistentInProcessCache)
+	- [Memoization](src/DesignPatternsLibrary/Cache/Memoization)
+5. [Async process runner](src/DesignPatternsLibrary/ProcessRunner)
+6. [Observer](src/DesignPatternsLibrary/Observer)
 	- Async observer
-7. MapReduce
-8. Auto dispose stack
+7. [MapReduce](src/DesignPatternsLibrary/MapReduce)
+8. [Auto dispose stack](src/DesignPatternsLibrary/Disposable/AutoDisposeStack.cs)
 9. Lock
-	- Simple lock
-10. Ring buffer
+	- [Simple lock](src/DesignPatternsLibrary/Lock/SimpleLock)
+10. [Ring buffer](src/DesignPatternsLibrary/RingBuffer)
