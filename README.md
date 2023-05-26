@@ -1,6 +1,6 @@
 # Practical Design Templates
 
-Collection of design templates in C#, toolbox for developing
+Collection of design templates in C#, toolbox for development
 
 1. Pipeline
 	- [Synchronous](src/DesignPatternsLibrary/Pipeline/Synchronous)
