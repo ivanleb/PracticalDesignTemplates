@@ -1,6 +1,6 @@
 # Practical Design Templates
 
-Collection of design templates in C#
+Collection of design templates in C#, toolbox for development
 
 1. Pipeline
 	- [Synchronous](src/DesignPatternsLibrary/Pipeline/Synchronous)
@@ -21,3 +21,4 @@ Collection of design templates in C#
 9. Lock
 	- [Simple lock](src/DesignPatternsLibrary/Lock/SimpleLock)
 10. [Ring buffer](src/DesignPatternsLibrary/RingBuffer)
+11. [RAII](src/DesignPatternsLibrary/RAII)
