@@ -11,6 +11,7 @@ DesignPatternsLibrary.Pipeline.MultiProcess.UseCase.Run();
 DesignPatternsLibrary.MapReduce.UseCase.Run();
 DesignPatternsLibrary.Lock.SimpleLock.UseCase.Run();
 DesignPatternsLibrary.Lock.TypedLock.UseCase.Run();
+DesignPatternsLibrary.Lock.AcquireLockStrategy.UseCase.Run();
 DesignPatternsLibrary.Disposable.UseCase.Run();
 DesignPatternsLibrary.RingBuffer.UseCase.Run();
 DesignPatternsLibrary.EventLoop.UseCase.Run();
