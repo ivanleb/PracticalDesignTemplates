@@ -16,3 +16,5 @@ DesignPatternsLibrary.Disposable.UseCase.Run();
 DesignPatternsLibrary.RingBuffer.UseCase.Run();
 DesignPatternsLibrary.EventLoop.UseCase.Run();
 DesignPatternsLibrary.RAII.UseCase.Run();
+
+DesignPatternsLibrary.Observer.DispatchedObserver.UseCase.Run();

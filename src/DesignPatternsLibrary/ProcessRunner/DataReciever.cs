@@ -1,4 +1,4 @@
-﻿using DesignPatternsLibrary.Observer;
+﻿using DesignPatternsLibrary.Observer.AsyncObserver;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;

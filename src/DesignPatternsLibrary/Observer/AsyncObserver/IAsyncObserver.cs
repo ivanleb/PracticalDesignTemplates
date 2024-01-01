@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace DesignPatternsLibrary.Observer
+namespace DesignPatternsLibrary.Observer.AsyncObserver
 {
     public interface IAsyncObserver<in T>
     {

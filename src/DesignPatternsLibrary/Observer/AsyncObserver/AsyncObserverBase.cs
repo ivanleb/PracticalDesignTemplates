@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DesignPatternsLibrary.Observer
+namespace DesignPatternsLibrary.Observer.AsyncObserver
 {
     public abstract class AsyncObserverBase<T> : IAsyncObserver<T>
     {
