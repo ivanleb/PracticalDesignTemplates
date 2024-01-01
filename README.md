@@ -20,6 +20,7 @@ Collection of design templates in C#, toolbox for development
 8. [Auto dispose stack](src/DesignPatternsLibrary/Disposable/AutoDisposeStack.cs)
 9. Lock
 	- [Simple lock](src/DesignPatternsLibrary/Lock/SimpleLock)
- 	- [Typed lock](src/DesignPatternsLibrary/Lock/TypedLock) 
+ 	- [Typed lock](src/DesignPatternsLibrary/Lock/TypedLock)
+  	- [Acquire lock strategy](src/DesignPatternsLibrary/Lock/AcquireLockStrategy) 
 10. [Ring buffer](src/DesignPatternsLibrary/RingBuffer)
 11. [RAII](src/DesignPatternsLibrary/RAII)
