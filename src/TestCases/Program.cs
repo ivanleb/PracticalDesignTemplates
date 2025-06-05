@@ -19,3 +19,4 @@ DesignPatternsLibrary.RAII.UseCase.Run();
 
 DesignPatternsLibrary.Observer.DispatchedObserver.UseCase.Run();
 DesignPatternsLibrary.ObjectPool.UseCase.Run();
+DesignPatternsLibrary.Retrying.UseCase.Run();
