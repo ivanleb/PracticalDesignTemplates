@@ -21,3 +21,4 @@ DesignPatternsLibrary.Observer.DispatchedObserver.UseCase.Run();
 DesignPatternsLibrary.ObjectPool.UseCase.Run();
 DesignPatternsLibrary.Retrying.UseCase.Run();
 DesignPatternsLibrary.Cache.OneVariableCache.UseCase.Run();
+DesignPatternsLibrary.NTimesValue.UseCase.Run();
